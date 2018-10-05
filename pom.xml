@@ -40,6 +40,14 @@
         <url>http://nhindirect.org/BSDLicense</url>
      </license>
   </licenses>     
+	<repositories>
+	    <!-- Temp repository for Spring Boot Milestone -->
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Milestone Releases</name>
+            <url>https://repo.spring.io/milestone/</url>
+        </repository>
+     </repositories>     
   <dependencies>       
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
