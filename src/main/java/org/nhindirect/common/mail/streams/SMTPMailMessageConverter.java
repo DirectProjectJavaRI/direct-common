@@ -2,6 +2,7 @@ package org.nhindirect.common.mail.streams;
 
 import static org.springframework.messaging.support.MessageBuilder.createMessage;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,15 +65,18 @@ public class SMTPMailMessageConverter
 	    return createMessage(out.toByteArray(), headers);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static SMTPMailMessage fromStreamMessage(Message<?> msg)
 	{
 		final Object payload = msg.getPayload();
 		
-		if (!(payload instanceof String))
+		if (!(payload instanceof String) && !(payload instanceof byte[]))
 			return null;
 		
-		final InputStream inStream = IOUtils.toInputStream(String.class.cast(payload), Charset.defaultCharset());
-		
+		final InputStream inStream = (payload instanceof String)
+				? IOUtils.toInputStream(String.class.cast(payload), Charset.defaultCharset())
+				: new ByteArrayInputStream(byte[].class.cast(payload));
+					
 		try
 		{
 			final MimeMessage mimeMessage = new MimeMessage((Session)null, inStream);
@@ -90,6 +94,10 @@ public class SMTPMailMessageConverter
 		catch (MessagingException e)
 		{
 			throw new org.springframework.messaging.MessagingException("Failed to convert message from internal structure", e);
+		}
+		finally
+		{
+			IOUtils.closeQuietly(inStream);
 		}
 	}
 	
