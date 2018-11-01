@@ -37,15 +37,23 @@ public class SMTPMailMessageConverter
 	
 	public static Message<?> toStreamMessage(SMTPMailMessage msg)
 	{
+		return toStreamMessage(msg, null);
+	}
+		
+	public static Message<?> toStreamMessage(SMTPMailMessage msg, Map<String, Object> hdrs)
+	{
 	    final ByteArrayOutputStream out = new ByteArrayOutputStream();
 	    final Map<String, Object> headerMap = new HashMap<>();
 	    try
 		{
+	    	if (hdrs != null)
+	    		hdrs.forEach((key, value) -> headerMap.put(key, value));
+	    	
 	    	msg.getMimeMessage().writeTo(out);
 	    	
 		    headerMap.put(MESSAGE_ID_HEADER_NAME, msg.getMimeMessage().getMessageID());
 		    if (msg.getMailFrom() != null)
-		    	headerMap.put(MAIL_FROM_HEADER_NAME, msg.getMailFrom());
+		    	headerMap.put(MAIL_FROM_HEADER_NAME, msg.getMailFrom().toString());
 		    
 		    if (!CollectionUtils.isEmpty(msg.getRecipientAddresses())) 
 		    {
@@ -82,7 +90,9 @@ public class SMTPMailMessageConverter
 			final MimeMessage mimeMessage = new MimeMessage((Session)null, inStream);
 			
 			final MessageHeaders headers = msg.getHeaders();
-			final InternetAddress mailFrom = (InternetAddress)headers.get(MAIL_FROM_HEADER_NAME);
+			final InternetAddress mailFrom = (headers.get(MAIL_FROM_HEADER_NAME) == null ) ? null : 
+				new InternetAddress((String)headers.get(MAIL_FROM_HEADER_NAME));
+			
 			final String rcpts = (String)headers.get(MAIL_RECIPIENTS_HEADER);
 			
 			final InternetAddress fromAddr = mailFrom;
