@@ -22,7 +22,11 @@ public class DefaultErrorDecoder implements ErrorDecoder
 			case 401:
 				return new AuthorizationException("Action not authorized");
 			case 404: 
-				return new ServiceMethodException(404, response.reason());
+			{
+				final String reason = (response == null || response.reason() == null) ? "" : response.reason();
+				
+				return new ServiceMethodException(404, reason);
+			}
 			default:
 			{
 		        final ByteArrayOutputStream out = new ByteArrayOutputStream();
