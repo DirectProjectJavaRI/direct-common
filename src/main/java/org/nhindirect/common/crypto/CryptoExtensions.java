@@ -29,8 +29,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Provider;
 import java.security.Security;
-import java.security.cert.CertStore;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateParsingException;
@@ -48,11 +46,13 @@ import javax.security.auth.x500.X500Principal;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerId;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.Store;
 import org.nhindirect.common.cert.SignerCertPair;
 import org.nhindirect.common.cert.Thumbprint;
 import org.nhindirect.common.options.OptionsManager;
@@ -431,25 +431,26 @@ public class CryptoExtensions
         
         try
         {
-	        CertStore certs = signedData.getCertificatesAndCRLs("Collection", CryptoExtensions.getJCEProviderName());
+        	Store<X509CertificateHolder> certHolder = signedData.getCertificates();// getCertificatesAndCRLs("Collection", CryptoExtensions.getJCEProviderName());
 	        SignerInformationStore  signers = signedData.getSignerInfos();
 	        Collection<SignerInformation> c = signers.getSigners();
 	        
 	        for (SignerInformation signer : c)
 	        {
-	            Collection<? extends Certificate> certCollection = certs.getCertificates(signer.getSID());
+	            Collection<X509CertificateHolder> certCollection = certHolder.getMatches(signer.getSID());
 	            if (certCollection != null && certCollection.size() > 0)
 	            {
 	            
-	            	X509Certificate cert = (X509Certificate)certCollection.iterator().next();
-	            	if (certSubjectContainsName(cert, name))
+	            	X509CertificateHolder cert = certCollection.iterator().next();
+	            	final X509Certificate theCert = (X509Certificate)certFactory.generateCertificate(new ByteArrayInputStream(cert.getEncoded()));
+	            	if (certSubjectContainsName(theCert, name))
 	            	{
 	            		boolean exclude = false;
 	            		
 	            		// check if we need to exclude anything
 	            		if (excludeNames != null)
 	            			for (String excludeStr : excludeNames)
-	            				if (certSubjectContainsName(cert, excludeStr))
+	            				if (certSubjectContainsName(theCert, excludeStr))
 	            				{
 	            					exclude = true;
 	            					break;
@@ -461,7 +462,7 @@ public class CryptoExtensions
 	            		if (retVal == null)
 	            			retVal = new ArrayList<SignerCertPair>();	            		
 	            		
-	            		retVal.add(new SignerCertPair(signer, convertToProfileProvidedCertImpl(cert))); 
+	            		retVal.add(new SignerCertPair(signer, convertToProfileProvidedCertImpl(theCert))); 
 	            	}
 	            } 
 	        }
