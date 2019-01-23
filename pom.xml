@@ -255,6 +255,33 @@
          </execution>
        </executions>
      </plugin> 
+      <plugin>
+      	<groupId>org.apache.maven.plugins</groupId> 
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.6.1</version>
+        <configuration>
+		    <additionalparam>-Xdoclint:none</additionalparam>
+			<charset>UTF-8</charset>
+			<docencoding>UTF-8</docencoding>
+			<docfilessubdirs>true</docfilessubdirs>
+			<detectJavaApiLink>true</detectJavaApiLink>
+			<detectLinks>true</detectLinks>
+			<source>1.8</source>
+			<show>public</show>
+            <excludePackageNames>
+               org.nhindirect.common.mail.dsn.impl:org.nhindirect.common.tx.impl:org.nhindirect.common.tx.provider:org.nhindirect.common.tx.module:org.nhindirect.common.tooling:org.nhindirect.common.crypto.tools
+            </excludePackageNames>   	                      	          
+        </configuration>	
+        <executions>
+            <execution>
+                <phase>package</phase>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+            </execution>
+        </executions>        	        
+      </plugin>      
          <!--  for releases only	     
 	     <plugin>
              <groupId>org.apache.maven.plugins</groupId>
