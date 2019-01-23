@@ -32,6 +32,7 @@ import java.util.Arrays;
 /**
  * An X509Certificate thumb print.  Thumb print is essentially a SHA-1 digest of the certificates der encoding.
  * @author Greg Meyer
+ * @since 6.0
  */
 public class Thumbprint 
 {	
