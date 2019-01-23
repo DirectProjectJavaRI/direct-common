@@ -1,3 +1,24 @@
+/* 
+Copyright (c) 2010, NHIN Direct Project
+All rights reserved.
+
+Authors:
+   Greg Meyer      gm2552@cerner.com
+ 
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer 
+in the documentation and/or other materials provided with the distribution.  Neither the name of the The NHIN Direct Project (nhindirect.org). 
+nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS 
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE 
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 package org.nhindirect.common.mail.streams;
 
 import static org.springframework.messaging.support.MessageBuilder.createMessage;
@@ -28,18 +49,33 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.util.CollectionUtils;
 
-
+/**
+ * SpringCloud streams converter class for SMTPMailMessage objects.
+ * @author Greg Meyer
+ * @since 6.0
+ */
 public class SMTPMailMessageConverter
 {
 	public static final String MESSAGE_ID_HEADER_NAME = "mail-message-id";
 	public static final String MAIL_FROM_HEADER_NAME = "mail-from";	
 	public static final String MAIL_RECIPIENTS_HEADER = "mail-recipients";	
 	
+	/**
+	 * Converts an SMTPMailMessage object to a Spring Cloud Stream message.
+	 * @param msg The mail message to convert.
+	 * @return A SpringCloud streams message.
+	 */
 	public static Message<?> toStreamMessage(SMTPMailMessage msg)
 	{
 		return toStreamMessage(msg, null);
 	}
 		
+	/**
+	 * Converts an SMTPMailMessage object and custom headers to a Spring Cloud Stream message.
+	 * @param msg The mail message to convert.
+	 * @param hdrs Custom headers to add to the message.
+	 * @return A SpringCloud streams message.
+	 */
 	public static Message<?> toStreamMessage(SMTPMailMessage msg, Map<String, Object> hdrs)
 	{
 	    final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -73,6 +109,11 @@ public class SMTPMailMessageConverter
 	    return createMessage(out.toByteArray(), headers);
 	}
 	
+	/**
+	 * Converts a SpringCloud message to an SMTPMailMessage
+	 * @param msg The message to convert.
+	 * @return A SMTPMailMessage object.
+	 */
 	@SuppressWarnings("deprecation")
 	public static SMTPMailMessage fromStreamMessage(Message<?> msg)
 	{

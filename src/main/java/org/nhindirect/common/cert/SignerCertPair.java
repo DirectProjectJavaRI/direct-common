@@ -29,7 +29,7 @@ import org.bouncycastle.cms.SignerInformation;
 /**
  * A pair object containing signer information and the certificate used in the signature.
  * @author Greg Meyer
- *
+ * @since 6.0
  */
 public class SignerCertPair 
 {
