@@ -111,7 +111,8 @@ public class DefaultDSNFailureTextBodyPartGenerator implements DSNFailureTextBod
 		while (originalMessageHeaders.hasMoreElements()) 
 		{
 		    Header h = originalMessageHeaders.nextElement();
-		    sb.append(StringEscapeUtils.escapeHtml4(h.getName() + ": " + h.getValue()));
+		    // use escapeXml10 vs escapeHtml4 for its NUL character removing capabilities
+		    sb.append(StringEscapeUtils.escapeXml10(h.getName() + ": " + h.getValue()));
 		    sb.append("<br/>");
 		}
 		return sb.toString();
