@@ -6,6 +6,24 @@
         Greg Meyer
         ---
 
+{7.0}
+
+    Changes included with release 7.0
+    
+    []
+    
+    Enhancements
+    
+ 	* Updated to SpringBoot 2.2.x and SpringCloud Hoxton SR1
+ 	
+ 	* Added java cfenv processor for jdbc connection url to r2dbc spring boot properties.
+
+    [] 
+     
+    Bug Fixes
+
+ 	* NA
+
 {6.0.1}
 
     Changes included with release 6.0.1
