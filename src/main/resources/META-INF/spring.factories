@@ -1,0 +1,6 @@
+# Environment Post Processors
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  org.nhindirect.common.cfenv.r2dbc.CfR2DBCDataSourceEnvironmentPostProcessor
+# Also register as a ApplicationListener to log what occurred in the post processing step
+org.springframework.context.ApplicationListener=\
+  org.nhindirect.common.cfenv.r2dbc.CfR2DBCDataSourceEnvironmentPostProcessor
