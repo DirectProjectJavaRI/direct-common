@@ -1,0 +1,30 @@
+{
+  "p-mysql": [
+    {
+      "credentials": {
+        "hostname": "10.0.4.35",
+        "port": 3306,
+		"tls": {
+            "cert": {
+               "ca": "-----BEGIN CERTIFICATE-----\nMIIDMTCCAhmgAwIBAgIUPOWXkDAcZ9AjqPMQBaotdRtJKlkwDQYJKoZIhvcNAQEL\nBQAwETEPMA0GA1UEAxMGcm9vdENBMB4XDTE4MTAwODIwMzAxNFoXDTE5MTAwODIw\nMzAxNFowETEPMA0GA1UEAxMGcm9vdENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A\nMIIBCgKCAQEAqEIHGn3X5zIfH7kNT0J8aloM8BOGYYozIEksLJhjy3ZJJTJeScxI\nEv/U3sw2iTf1X2SkwUPkd/5T0GdTJe+5JY5oJFNOJlaO+8pcJ/UctrDuG3AeeIdR\n3ZmupyCrbcD+rRfhMaykFBHYzhpsqAuVdWAvG2995mqFyzBVnRjK98Dz5e3txCgf\nhlcLkM3xg01uZUEjmp+QSNqg+dE5kafxil/GfaP6i7TLbmIfg5vGYjcK0ws1HsI7\nM4VTrOime/dDQP7pVuN/7vml4jQtDxrbET7nQWskna35ztzagGU9qIwpPM8t3+U8\nb8ASTYxc3Tp6oMpBiAv5Le1mWWRzwfSaRQIDAQABo4GAMH4wHQYDVR0OBBYEFOXj\nuomG9Ud4GPTNjSJBaxhf2mNLMEwGA1UdIwRFMEOAFOXjuomG9Ud4GPTNjSJBaxhf\n2mNLoRWkEzARMQ8wDQYDVQQDEwZyb290Q0GCFDzll5AwHGfQI6jzEAWqLXUbSSpZ\nMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEBAEJ9+njsPiIZh5MS\nUpJX+doHbIUU+2KPe9hMTYiIlh2NJrzPMtTO+kRlWInscQMorQ3/sGUP/oj4lBYd\nxpg+WcKicn5uYJsCMk8GaW+bfw6t6HTEw/hEHJersgtMuMUv2IecyZbwdR0grxMG\nMpq60tvd9YiIi5ZVRa5cHqTryGqAA/6W8SNy/BXeuHRac0tGhszTCjceSttRJgTN\nb1i/J2f74HRoe0TQKrZ2W7kGOuUiPSWn9ziVjKwnXJKZw2FyHPtpnQhKCaVFs95L\nB5hRRfgz3E36YJSXj4PLCMqsONNL3wW/HUhAwXopVgwKOJSYQYnt8mqFqWFAeiZ8\nQMiW4lM=\n-----END CERTIFICATE-----\n"
+                     }
+                },        
+        "name": "mysql_name",
+        "username": "mysql_username",
+        "password": "mysql_password",
+        "uri": "mysql://mysql_username:mysql_password@10.0.4.35:3306/cf_2e23d10a_8738_8c3c_66cf_13e44422698c?reconnect=true",
+        "jdbcUrl": "jdbc:mysql://10.0.4.35:3306/cf_2e23d10a_8738_8c3c_66cf_13e44422698c?user=mysql_username&password=mysql_password&useSSL=true&requireSSL=true"
+      },
+      "syslog_drain_url": null,
+      "volume_mounts": [],
+      "label": "p-mysql",
+      "provider": null,
+      "plan": "100mb",
+      "name": "mysql",
+      "tags": [
+        "mysql",
+        "relational"
+      ]
+    }
+  ]
+}
