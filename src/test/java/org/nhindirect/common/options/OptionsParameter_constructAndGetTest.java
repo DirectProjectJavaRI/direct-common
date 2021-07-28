@@ -1,9 +1,14 @@
 package org.nhindirect.common.options;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class OptionsParameter_constructAndGetTest extends TestCase
+import org.junit.jupiter.api.Test;
+
+public class OptionsParameter_constructAndGetTest
 {	
+	@Test
 	public void testContructParamter() throws Exception
 	{
 		OptionsParameter param = new OptionsParameter(OptionsParameter.JCE_PROVIDER, "Test Value");
@@ -12,6 +17,7 @@ public class OptionsParameter_constructAndGetTest extends TestCase
 		assertEquals("Test Value", param.getParamValue());
 	}
 	
+	@Test
 	public void testContructParamter_emptyValue() throws Exception
 	{
 		OptionsParameter param = new OptionsParameter(OptionsParameter.JCE_PROVIDER, "");
@@ -20,6 +26,7 @@ public class OptionsParameter_constructAndGetTest extends TestCase
 		assertEquals("", param.getParamValue());
 	}
 	
+	@Test
 	public void testContructParamter_nullValue() throws Exception
 	{
 		OptionsParameter param = new OptionsParameter(OptionsParameter.JCE_PROVIDER, null);
@@ -28,6 +35,7 @@ public class OptionsParameter_constructAndGetTest extends TestCase
 		assertNull(param.getParamValue());
 	}
 	
+	@Test
 	public void testContructParamter_emptyName_assertException() throws Exception
 	{
 		boolean exceptionOccured = false;
@@ -44,7 +52,7 @@ public class OptionsParameter_constructAndGetTest extends TestCase
 		assertTrue(exceptionOccured);
 	}
 	
-	
+	@Test
 	public void testContructParamter_nullName_assertException() throws Exception
 	{
 		boolean exceptionOccured = false;

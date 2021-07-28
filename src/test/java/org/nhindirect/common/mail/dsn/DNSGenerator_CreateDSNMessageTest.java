@@ -1,10 +1,12 @@
 package org.nhindirect.common.mail.dsn;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +20,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.nhindirect.common.mail.MailStandard;
 import org.nhindirect.common.mail.dsn.DSNStandard.DSNAction;
 import org.nhindirect.common.mail.dsn.DSNStandard.DSNStatus;
@@ -30,8 +32,6 @@ import org.nhindirect.common.mail.dsn.impl.HumanReadableTextAssemblerFactory;
 
 public class DNSGenerator_CreateDSNMessageTest 
 {
-
-	
 	@Test
 	public void testCreateDSNMessage_createGeneralDSNMessage() throws Exception
 	{

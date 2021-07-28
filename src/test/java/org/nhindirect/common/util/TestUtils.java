@@ -6,16 +6,8 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
 
-import org.junit.Test;
-
 public class TestUtils 
-{
-	@Test
-	public void dummy()
-	{
-		
-	}
-	
+{	
     /**
      * used for testing with a pkcs11 token
      * @return The Security provider name if the token is loaded successfully... an empty string other wise 

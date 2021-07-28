@@ -1,26 +1,33 @@
 package org.nhindirect.common.options;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class OptionsManager_addInitParametersTest extends TestCase
+public class OptionsManager_addInitParametersTest
 {
-	@Override
+	@BeforeEach
 	public void setUp()
 	{
 		OptionsManager.INSTANCE = null;
 	}
 	
-	@Override
+	@AfterEach
 	public void tearDown()
 	{
 		OptionsManager.getInstance().options.clear();
 
 	}
 	
+	@Test
 	public void testAddInitParameters_optionsDoNotInitallyExist() 
 	{
 		// verify the options are not initially available
@@ -47,6 +54,7 @@ public class OptionsManager_addInitParametersTest extends TestCase
 		}
 	}
 	
+	@Test
 	public void testAddInitParameters_noInstance_optionsDoNotInitallyExist() 
 	{
 		// verify the options are not initially available
@@ -74,6 +82,7 @@ public class OptionsManager_addInitParametersTest extends TestCase
 		}
 	}
 	
+	@Test
 	public void testAddInitParameters_optionsInitallyExist() 
 	{
 

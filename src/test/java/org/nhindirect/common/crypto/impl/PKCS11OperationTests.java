@@ -1,6 +1,7 @@
 package org.nhindirect.common.crypto.impl;
 
-import static org.junit.Assert.assertNotNull;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.security.KeyStore;
@@ -15,7 +16,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.nhindirect.common.crypto.PKCS11Credential;
 import org.nhindirect.common.crypto.exceptions.CryptoException;
 import org.nhindirect.common.util.TestUtils;

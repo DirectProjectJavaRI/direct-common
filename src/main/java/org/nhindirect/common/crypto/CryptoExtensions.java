@@ -36,16 +36,10 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
-import javax.security.auth.x500.X500Principal;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerId;
@@ -58,12 +52,15 @@ import org.nhindirect.common.cert.Thumbprint;
 import org.nhindirect.common.options.OptionsManager;
 import org.nhindirect.common.options.OptionsParameter;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Utility functions for searching for certificates.
  * @author Greg Meyer
  * @author Umesh Madan
  */
 @SuppressWarnings("unchecked")
+@Slf4j
 public class CryptoExtensions 
 {
 	private static final String DEFAULT_JCE_PROVIDER_STRING = BouncyCastleProvider.PROVIDER_NAME;
@@ -78,9 +75,6 @@ public class CryptoExtensions
 	private static final int DNSName_TYPE = 2; // name type constant for Subject Alternative name domain name	
 	
 	private static CertificateFactory certFactory;		
-	
-	@SuppressWarnings("deprecation")
-	private static final Log LOGGER = LogFactory.getFactory().getInstance(CryptoExtensions.class);	
 	
 	static 
 	{
@@ -106,6 +100,17 @@ public class CryptoExtensions
 	 */
 	public static void registerJCEProviders()
 	{
+		registerJCEProviders(null);
+	}
+	
+	/**
+	 * This variation of registerJCEProviders allows for a class loader to be specified for loading JCE Provider classes.  
+	 * 
+	 * @param clazzLoader  The class loader to use for dynamically loading Provider classes.  If this parameter is null, the CroptoExensions default
+	 * class loader is used.
+	 */
+	public static void registerJCEProviders(ClassLoader clazzLoader)
+	{
 		// registering the default JCE providers
 		String[] providerClasses = null;
 		OptionsParameter param = OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER_CLASSES);
@@ -120,7 +125,10 @@ public class CryptoExtensions
 		{
 			try
 			{
-				final Class<?> providerClazz = CryptoExtensions.class.getClassLoader().loadClass(providerClass);
+				final Class<?> providerClazz = (clazzLoader == null) ?
+						CryptoExtensions.class.getClassLoader().loadClass(providerClass) :
+						clazzLoader.loadClass(providerClass);
+				
 				final Provider provider = Provider.class.cast(providerClazz.newInstance());
 				
 				// check to see if the provider is already registered
@@ -166,10 +174,10 @@ public class CryptoExtensions
 						
 						if (e.getTargetException() instanceof IllegalStateException)
 						{
-							LOGGER.warn("Could not create a JCE Provider with the specific parameter: " + provParams[1], e);
+							log.warn("Could not create a JCE Provider with the specific parameter: {}",provParams[1], e);
 						}
 						else
-							LOGGER.warn("JCE Provider param  " + provParams[1] + " provided but not supported by JCE Provider implementation:" + e.getMessage(), e);
+							log.warn("JCE Provider param {} provided but not supported by JCE Provider implementation: {}", provParams[1], e.getMessage(), e);
 					}
 				}
 				else
@@ -364,7 +372,8 @@ public class CryptoExtensions
     }	
 	
 	/**
-	 * Checks if a name is contained in a certificate's DN or alt subjects. 
+	 * Checks if a name is contained in a certificate's alt subjects. 
+	 * NOTE: The subject DN legacy email attribute is no longer supported.
 	 * @param cert The certificate to check.
 	 * @param name The name to search for in the certificate.
 	 * @return True if the name is found in the certificate.  False otherwise.
@@ -596,36 +605,13 @@ public class CryptoExtensions
     		}
 		}
     	
-    	if (!address.isEmpty())
-    		return address;
+
+    	return address;
     	
-    	// can't find issuer address in alt names... try the principal 
-    	X500Principal issuerPrin = certificate.getSubjectX500Principal();
-    	
-    	// get the domain name
-		Map<String, String> oidMap = new HashMap<String, String>();
-		oidMap.put("1.2.840.113549.1.9.1", "EMAILADDRESS");  // OID for email address
-		String prinName = issuerPrin.getName(X500Principal.RFC1779, oidMap);    
-		
-		// see if there is an email address first in the DN
-		String searchString = "EMAILADDRESS=";
-		int index = prinName.indexOf(searchString);
-		if (index == -1)
-		{
-			searchString = "CN=";
-			// no Email.. check the CN
-			index = prinName.indexOf(searchString);
-			if (index == -1)
-				return ""; // no CN... nothing else that can be done from here
-		}
-		
-		// look for a "," to find the end of this attribute
-		int endIndex = prinName.indexOf(",", index);
-		if (endIndex > -1)
-			address = prinName.substring(index + searchString.length(), endIndex);
-		else 
-			address= prinName.substring(index + searchString.length());
-		
-		return address;
+    	/*
+    	 * As of version ANSI/DS 2019-01-100-2021 approved on May 13, 20201, the legacy Email field of the
+    	 * subject distinguished name is officially no longer supported for certificate binding to Direct addresses.
+    	 * Only the subject alt name is now used.
+    	 */
     }    
 }

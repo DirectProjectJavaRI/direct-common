@@ -1,28 +1,35 @@
 package org.nhindirect.common.crypto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.security.Security;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.nhindirect.common.options.OptionsManager;
 import org.nhindirect.common.options.OptionsManagerUtils;
 import org.nhindirect.common.options.OptionsParameter;
 
-import junit.framework.TestCase;
-
-public class CryptoExtensions_registerJCEProvidersTest extends TestCase
+public class CryptoExtensions_registerJCEProvidersTest
 {
-	@Override
+	@BeforeEach
 	public void setUp()
 	{
 		OptionsManagerUtils.clearOptionsManagerInstance();
 	}
 	
-	@Override
+	@AfterEach
 	public void tearDown()
 	{
 		OptionsManagerUtils.clearOptionsManagerOptions();
 		OptionsManagerUtils.clearOptionsManagerInstance();
 	}
 	
+	@Test
 	public void testRegisterJCEProviders_noOptions_providerNotAlreadyRegistered()
 	{
 		Security.removeProvider("BC");
@@ -35,6 +42,7 @@ public class CryptoExtensions_registerJCEProvidersTest extends TestCase
 		assertNotNull(Security.getProvider("BC"));
 	}
 	
+	@Test
 	public void testRegisterJCEProviders_emptyOptionValue_providerNotAlreadyRegistered()
 	{
 		Security.removeProvider("BC");
@@ -50,6 +58,7 @@ public class CryptoExtensions_registerJCEProvidersTest extends TestCase
 		assertNotNull(Security.getProvider("BC"));
 	}
 	
+	@Test
 	public void testRegisterJCEProviders_nullOptionValue_providerNotAlreadyRegistered()
 	{
 		Security.removeProvider("BC");
@@ -65,6 +74,7 @@ public class CryptoExtensions_registerJCEProvidersTest extends TestCase
 		assertNotNull(Security.getProvider("BC"));
 	}
 	
+	@Test
 	public void testRegisterJCEProviders_noOptions_providerAlreadyRegistered()
 	{
 		if (Security.getProvider("BC") == null)
@@ -80,6 +90,7 @@ public class CryptoExtensions_registerJCEProvidersTest extends TestCase
 		assertEquals(registeredProviderCount, Security.getProviders().length);
 	}	
 	
+	@Test
 	public void testRegisterJCEProviders_singleValidConfiguredProvider_providerNotAlreadyRegistered()
 	{
 		Security.removeProvider("BC");
@@ -95,6 +106,7 @@ public class CryptoExtensions_registerJCEProvidersTest extends TestCase
 		assertNotNull(Security.getProvider("BC"));
 	}	
 	
+	@Test
 	public void testRegisterJCEProviders_singleValidJVMOptionsConfiguredProvider_providerNotAlreadyRegistered()
 	{
 		Security.removeProvider("BC");
@@ -113,22 +125,22 @@ public class CryptoExtensions_registerJCEProvidersTest extends TestCase
 		System.clearProperty("org.nhindirect.stagent.cryptography.JCEProviderClassNames");
 	}	
 	
-	public void testRegisterJCEProviders_multipleProviders_providerNotAlreadyRegistered()
+	@Test
+	public void testRegisterJCEProviders_multipleProviders_providerNotAlreadyRegistered() throws Exception
 	{
 		Security.removeProvider("BC");
 		Security.removeProvider("JunitMockProvider");
 		
 		OptionsManager.getInstance().setOptionsParameter(new OptionsParameter(OptionsParameter.JCE_PROVIDER_CLASSES, 
-				"org.bouncycastle.jce.provider.BouncyCastleProvider,org.nhindirect.common.crypto.MockJCEProvider"));
+				"org.bouncycastle.jce.provider.BouncyCastleProvider,org.nhindirect.common.util.MockJCEProvider"));
 		assertNotNull(OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER_CLASSES));
-		assertEquals("org.bouncycastle.jce.provider.BouncyCastleProvider,org.nhindirect.common.crypto.MockJCEProvider", OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER_CLASSES).getParamValue());
+		assertEquals("org.bouncycastle.jce.provider.BouncyCastleProvider,org.nhindirect.common.util.MockJCEProvider", OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER_CLASSES).getParamValue());
 		assertNull(Security.getProvider("BC"));
 		assertNull(Security.getProvider("JunitMockProvider"));
 		
-		
-		CryptoExtensions.registerJCEProviders();
+		CryptoExtensions.registerJCEProviders(this.getClass().getClassLoader());
 		assertNotNull(OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER_CLASSES));
-		assertEquals("org.bouncycastle.jce.provider.BouncyCastleProvider,org.nhindirect.common.crypto.MockJCEProvider", OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER_CLASSES).getParamValue());
+		assertEquals("org.bouncycastle.jce.provider.BouncyCastleProvider,org.nhindirect.common.util.MockJCEProvider", OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER_CLASSES).getParamValue());
 		assertNotNull(Security.getProvider("BC"));
 
 		assertNotNull(Security.getProvider("JunitMockProvider"));
@@ -136,6 +148,7 @@ public class CryptoExtensions_registerJCEProvidersTest extends TestCase
 		Security.removeProvider("JunitMockProvider");
 	}	
 	
+	@Test
 	public void testRegisterJCEProviders_invalidProvider_assertException()
 	{
 		Security.removeProvider("BC");

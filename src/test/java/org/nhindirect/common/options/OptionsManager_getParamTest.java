@@ -1,16 +1,24 @@
 package org.nhindirect.common.options;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class OptionsManager_getParamTest  extends TestCase
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+
+public class OptionsManager_getParamTest
 {
-	@Override
+	@BeforeEach
 	public void setUp()
 	{
 		OptionsManager.INSTANCE = null;
 	}
 	
-	@Override
+	@AfterEach
 	public void tearDown()
 	{
 		OptionsManager.getInstance().options.clear();
@@ -24,6 +32,7 @@ public class OptionsManager_getParamTest  extends TestCase
 
 	}
 	
+	@Test
 	public void testGetParams_overrideExistantParam() throws Exception
 	{		
 		OptionsManager mgr = OptionsManager.getInstance();
@@ -51,6 +60,7 @@ public class OptionsManager_getParamTest  extends TestCase
 		assertEquals(param.getParamValue(), retParam.getParamValue());
 	}
 	
+	@Test
 	public void testGetParams_overrideJVMParam() throws Exception
 	{		
 		System.setProperty("org.nhindirect.stagent.cryptography.JCEProviderName", "BC");
@@ -88,6 +98,7 @@ public class OptionsManager_getParamTest  extends TestCase
 		assertTrue(exceptionOccured);
 	}
 	
+	@Test
 	public void testGetParams_emptyParameter_assertException() throws Exception
 	{		
 		OptionsManager mgr = OptionsManager.getInstance();

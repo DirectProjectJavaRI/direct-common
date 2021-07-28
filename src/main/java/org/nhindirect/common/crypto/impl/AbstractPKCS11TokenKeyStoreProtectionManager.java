@@ -43,12 +43,12 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.nhindirect.common.crypto.MutableKeyStoreProtectionManager;
 import org.nhindirect.common.crypto.PKCS11Credential;
 import org.nhindirect.common.crypto.WrappableKeyProtectionManager;
 import org.nhindirect.common.crypto.exceptions.CryptoException;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Abstract base class for accessing key store pass phrases from a PKCS11 token.  Concrete implementations 
@@ -58,11 +58,9 @@ import org.nhindirect.common.crypto.exceptions.CryptoException;
  * @author Greg Meyer
  * @since 1.3
  */
+@Slf4j
 public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements MutableKeyStoreProtectionManager, WrappableKeyProtectionManager
 {
-
-	@SuppressWarnings("deprecation")
-	private static final Log LOGGER = LogFactory.getFactory().getInstance(AbstractPKCS11TokenKeyStoreProtectionManager.class);
 	
 	public static final String SUNPKCS11_KEYSTORE_PROVIDER_NAME = "sun.security.pkcs11.SunPKCS11";
 	public static final String DEFAULT_KESTORE_TYPE = "PKCS11";
@@ -532,7 +530,7 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 		} 
 		catch (Exception e) 
 		{
-			LOGGER.warn("Could not set key entry on first attemp.  Will attempt to reload the key store and try again");
+			log.warn("Could not set key entry on first attemp.  Will attempt to reload the key store and try again");
 			reloadAndRetry = true;
 		}
 		
@@ -561,7 +559,7 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 		} 
 		catch (Exception e) 
 		{
-			LOGGER.warn("Could not delete key entry on first attemp.  Will attempt to reload the key store and try again");
+			log.warn("Could not delete key entry on first attemp.  Will attempt to reload the key store and try again");
 			reloadAndRetry = true;
 		}
 		
@@ -590,7 +588,7 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 		} 
 		catch (Exception e) 
 		{
-			LOGGER.warn("Could not set entry on first attemp.  Will attempt to reload the key store and try again");
+			log.warn("Could not set entry on first attemp.  Will attempt to reload the key store and try again");
 			reloadAndRetry = true;
 		}
 		
@@ -622,8 +620,8 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 		} 
 		catch (Exception e) 
 		{
-			LOGGER.warn("Loading key " + alias);
-			LOGGER.warn("Could not get key entry on first attemp.  Will attempt to reload the key store and try again", e);
+			log.warn("Loading key {}", alias);
+			log.warn("Could not get key entry on first attemp.  Will attempt to reload the key store and try again", e);
 			reloadAndRetry = true;
 		}
 		
@@ -657,8 +655,8 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 		} 
 		catch (Exception e) 
 		{
-			LOGGER.info("Loading key " + alias);
-			LOGGER.warn("Could not get entry on first attemp.  Will attempt to reload the key store and try again", e);
+			log.info("Loading key {}", alias);
+			log.warn("Could not get entry on first attemp.  Will attempt to reload the key store and try again", e);
 			reloadAndRetry = true;
 		}
 		

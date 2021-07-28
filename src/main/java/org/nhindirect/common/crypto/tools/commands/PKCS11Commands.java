@@ -642,7 +642,7 @@ public class PKCS11Commands
 			
 	        final ASN1EncodableVector attributes = new ASN1EncodableVector();
 	        final Attribute attribute = new Attribute(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest,
-	                new DERSet(exts.toASN1Object()));
+	                new DERSet(exts.toASN1Primitive()));
 	        
 	        attributes.add(attribute);
 	        

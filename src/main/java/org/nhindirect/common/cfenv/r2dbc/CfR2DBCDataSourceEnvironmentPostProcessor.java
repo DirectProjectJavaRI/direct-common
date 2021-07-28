@@ -65,7 +65,7 @@ public class CfR2DBCDataSourceEnvironmentPostProcessor extends CfDataSourceEnvir
 			{
 				
 				Map<String, Object> properties = new LinkedHashMap<>();
-				final Map.Entry<String, Map<String, String>> processedUrl = processUrl(cfJdbcService.getUrl());
+				final Map.Entry<String, Map<String, String>> processedUrl = processUrl(cfJdbcService.getJdbcUrl());
 				
 				String url = processedUrl.getKey();
 				
