@@ -23,10 +23,10 @@ package org.nhindirect.common.crypto.impl;
 
 import java.security.KeyStore;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.nhindirect.common.crypto.PKCS11Credential;
 import org.nhindirect.common.crypto.exceptions.CryptoException;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Implementation of PKCS11 token store that generally does not get detached from the system.  Credentials are accessed via a PKCS11Credential implementation.
@@ -34,11 +34,9 @@ import org.nhindirect.common.crypto.exceptions.CryptoException;
  * @since 1.3
  */
 /// CLOVER:OFF
+@Slf4j
 public class StaticPKCS11TokenKeyStoreProtectionManager extends AbstractPKCS11TokenKeyStoreProtectionManager
 {
-	@SuppressWarnings("deprecation")
-	private static final Log LOGGER = LogFactory.getFactory().getInstance(StaticPKCS11TokenKeyStoreProtectionManager.class);	
-	
 	/**
 	 * Empty constructor
 	 * @throws CryptoException
@@ -69,7 +67,7 @@ public class StaticPKCS11TokenKeyStoreProtectionManager extends AbstractPKCS11To
 		
 		try
 		{
-			LOGGER.debug("Initializing token store type " + keyStoreType);
+			log.debug("Initializing token store type {}", keyStoreType);
 			ks = KeyStore.getInstance(keyStoreType);
 			ks.load(keyStoreSource, credential.getPIN()); 
 		}

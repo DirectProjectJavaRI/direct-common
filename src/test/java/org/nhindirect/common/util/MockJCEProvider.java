@@ -1,4 +1,4 @@
-package org.nhindirect.common.crypto;
+package org.nhindirect.common.util;
 
 import java.security.Provider;
 

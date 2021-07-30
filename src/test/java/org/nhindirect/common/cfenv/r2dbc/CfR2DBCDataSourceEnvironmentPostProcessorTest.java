@@ -5,13 +5,16 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.nio.file.Files;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.ResourceUtils;
 
 import io.pivotal.cfenv.test.AbstractCfEnvTests;
+import mockit.integration.junit5.JMockitExtension;
 
+@ExtendWith(JMockitExtension.class)
 public class CfR2DBCDataSourceEnvironmentPostProcessorTest extends AbstractCfEnvTests
 {
 	private final CfR2DBCDataSourceEnvironmentPostProcessor environmentPostProcessor = new CfR2DBCDataSourceEnvironmentPostProcessor();

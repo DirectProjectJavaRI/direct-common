@@ -31,20 +31,20 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Manages options tuning and configuration parameters of the agent.  Parameters are initialized from JVM parameters or from a properties file
  * if present and can be overridden programmatically.
  * <br>
  * The following is the order or precedence for applying options: 
- * <ol>
+ * <ul>
  * <li>Programmatic settings</li>
  * <li>JVM Settings</li>
  * <li>Properties based settings</li>
  * <li>Default settings</li>
- * <ol>
+ * <ul>
  * By default, the manager looks for a properties file named <i>agentSettings.properties</i> in the working directory, but can be overriden using the JVM parameter
  * org.nhindirect.stagent.PropertiesFile providing either the full path and file name or just file name that needs to be located in the working directory.
  * <br>Property and JVM setting names are defined in the {@link OptionsParameter} class.
@@ -55,10 +55,9 @@ import org.apache.commons.logging.LogFactory;
  * @author gm2552
  * @since 1.4
  */
+@Slf4j
 public class OptionsManager 
 {
-	@SuppressWarnings("deprecation")
-	private static final Log LOGGER = LogFactory.getFactory().getInstance(OptionsManager.class);
 
 	protected final static String OPTIONS_PROPERTIES_FILE_JVM_PARAM = "org.nhindirect.stagent.PropertiesFile";
 	
@@ -124,7 +123,7 @@ public class OptionsManager
 	/**
 	 * Adds custom init parameters used for options.  Initialization parameters are added as a map of names to JVM parameters/properties.  Although not required, names
 	 * should be name appropriately using the same convention as {@link OptionParameter option parameters}.  Names are the string used when calling
-	 * {@link OptionsManager#getParameter(String)}.
+	 * {@link OptionsManager#getParameter(paramName)}.
 	 * <br>
 	 * If the OptionsManager has already been initialized with a previous call to {@link OptionsManager#getInstance()}, the manager immediately searched
 	 * for JVM parameters in the map's values and loads them into the manager.
@@ -212,7 +211,7 @@ public class OptionsManager
 	/**
 	 * Sets a collection of options parameters.  If an existing setting with the same name already exist, then it will be replaced with 
 	 * the new setting.
-	 * @param params
+	 * @param params Collection of options parameters.
 	 */
 	public synchronized void setOptionsParameters(Collection<OptionsParameter> params)
 	{
@@ -286,7 +285,7 @@ public class OptionsManager
 			///CLOVER:OFF
 			catch (Exception e)
 			{
-				LOGGER.warn("Exception occured loading options settings from properties file " + optionsFile, e);
+				log.warn("Exception occured loading options settings from properties file {} ", optionsFile, e);
 			}
 			///CLOVER:ON
 			finally

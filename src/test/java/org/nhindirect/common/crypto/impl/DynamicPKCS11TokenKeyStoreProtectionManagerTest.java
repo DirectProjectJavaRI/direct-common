@@ -1,18 +1,8 @@
 package org.nhindirect.common.crypto.impl;
 
-
-import org.junit.Test;
-
-
 public class DynamicPKCS11TokenKeyStoreProtectionManagerTest 
 {
 
-	
-	@Test
-	public void testDummy()
-	{
-		
-	}
 	
 	/*
 	 * Enable the tests below when testing with a real PKCS token

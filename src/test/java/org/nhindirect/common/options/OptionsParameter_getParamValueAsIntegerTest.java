@@ -1,11 +1,15 @@
 package org.nhindirect.common.options;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
 import java.security.SecureRandom;
 
-import junit.framework.TestCase;
 
-public class OptionsParameter_getParamValueAsIntegerTest extends TestCase 
+public class OptionsParameter_getParamValueAsIntegerTest
 {
+	@Test
 	public void testGetParamValueAsInteger_nullParam_returnDefaultVal()
 	{
 		SecureRandom random = new SecureRandom();
@@ -17,6 +21,7 @@ public class OptionsParameter_getParamValueAsIntegerTest extends TestCase
 		assertEquals(defaultVal, retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsInteger_nullParamValue_returnDefaultVal()
 	{
 		SecureRandom random = new SecureRandom();
@@ -28,6 +33,7 @@ public class OptionsParameter_getParamValueAsIntegerTest extends TestCase
 		assertEquals(defaultVal, retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsInteger_emptyParamValue_returnDefaultVal()
 	{
 		SecureRandom random = new SecureRandom();
@@ -39,6 +45,7 @@ public class OptionsParameter_getParamValueAsIntegerTest extends TestCase
 		assertEquals(defaultVal, retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsInteger_invalidIntFormat_returnDefaultVal()
 	{
 		SecureRandom random = new SecureRandom();
@@ -50,6 +57,7 @@ public class OptionsParameter_getParamValueAsIntegerTest extends TestCase
 		assertEquals(defaultVal, retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsInteger_validValue_returnValue()
 	{
 		SecureRandom random = new SecureRandom();

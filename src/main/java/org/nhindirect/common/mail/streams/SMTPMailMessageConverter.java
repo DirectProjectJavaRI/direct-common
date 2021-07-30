@@ -114,7 +114,6 @@ public class SMTPMailMessageConverter
 	 * @param msg The message to convert.
 	 * @return A SMTPMailMessage object.
 	 */
-	@SuppressWarnings("deprecation")
 	public static SMTPMailMessage fromStreamMessage(Message<?> msg)
 	{
 		final Object payload = msg.getPayload();
@@ -122,11 +121,11 @@ public class SMTPMailMessageConverter
 		if (!(payload instanceof String) && !(payload instanceof byte[]))
 			return null;
 		
-		final InputStream inStream = (payload instanceof String)
-				? IOUtils.toInputStream(String.class.cast(payload), Charset.defaultCharset())
-				: new ByteArrayInputStream(byte[].class.cast(payload));
+
 					
-		try
+		try (final InputStream inStream = (payload instanceof String)
+				? IOUtils.toInputStream(String.class.cast(payload), Charset.defaultCharset())
+				: new ByteArrayInputStream(byte[].class.cast(payload)))
 		{
 			final MimeMessage mimeMessage = new MimeMessage((Session)null, inStream);
 			
@@ -142,13 +141,9 @@ public class SMTPMailMessageConverter
 			return new SMTPMailMessage(mimeMessage, rcptsTos, fromAddr);
 			
 		}
-		catch (MessagingException e)
+		catch (MessagingException | IOException e)
 		{
 			throw new org.springframework.messaging.MessagingException("Failed to convert message from internal structure", e);
-		}
-		finally
-		{
-			IOUtils.closeQuietly(inStream);
 		}
 	}
 	

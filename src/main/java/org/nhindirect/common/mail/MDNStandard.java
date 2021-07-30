@@ -32,8 +32,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Provides constants and utility functions for working with MDN
@@ -41,11 +40,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Umesh Madan
  * @since 1.1
  */
+@Slf4j
 public class MDNStandard 
-{
-	@SuppressWarnings("deprecation")
-	private static final Log LOGGER = LogFactory.getFactory().getInstance(MDNStandard.class);
-	
+{	
 	private static Class<?> dsnClass;
 	private static Method getHeaders;
 	
@@ -211,7 +208,7 @@ public class MDNStandard
 		}
 		catch (IllegalArgumentException e)
 		{
-			LOGGER.warn("Failed to retrieve MDN field from message.  Message may not be an MDN message.", e);
+			log.warn("Failed to retrieve MDN field from message.  Message may not be an MDN message.", e);
 		}
 		
 		if (headers != null)

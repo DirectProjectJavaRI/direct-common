@@ -24,8 +24,7 @@ package org.nhindirect.common.mail;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Common RFC822/5322 headers and common header collections. 
@@ -33,10 +32,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Umesh Madan
  *
  */
+@Slf4j
 public class MailStandard 
 {
-	@SuppressWarnings("deprecation")
-	private static final Log LOGGER = LogFactory.getFactory().getInstance(MailStandard.class);
 	
 	public static class Headers
 	{
@@ -74,7 +72,7 @@ public class MailStandard
 		catch (MessagingException e)
 		{
 			///CLOVER:OFF			
-			LOGGER.warn("Failed to retrieve header \"" + headerName + "\" from message.", e);
+			log.warn("Failed to retrieve header \"{}\" from message.", headerName, e);
 			///CLOVER:ON
 		}
 		

@@ -1,30 +1,35 @@
 package org.nhindirect.common.options;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
-public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
+public class OptionsManager_loadParamsFromPropertiesFileTest
 {
-	@Override
+	@BeforeEach
 	public void setUp()
 	{
 		OptionsManager.destroyInstance();
 	}
 	
-	@Override
+	@AfterEach
 	public void tearDown()
 	{
 		OptionsManager.getInstance().options.clear();
 
 	}
 	
-	@SuppressWarnings("deprecation")
+	@Test
 	public void testloadParamsFromPropertiesFile_defaultPropertiesFile() throws Exception
 	{
 		System.setProperty(OptionsManager.OPTIONS_PROPERTIES_FILE_JVM_PARAM, "");
@@ -35,18 +40,16 @@ public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
 		assertFalse(propFile.exists());
 		
 		propFile = new File(OptionsManager.DEFAULT_PROPERTIES_FILE);
-		OutputStream outStream = null;
 		propFile.createNewFile();
 		
-		try
+		try (OutputStream outStream = FileUtils.openOutputStream(propFile, true);)
 		{
-			outStream = FileUtils.openOutputStream(propFile, true);
+			
 			outStream.write("org.nhindirect.stagent.cryptography.JCEProviderName=SC".getBytes());
 			outStream.flush();
 		}
 		finally
 		{
-			IOUtils.closeQuietly(outStream);
 		}
 		
 		OptionsParameter param = OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER);
@@ -62,6 +65,7 @@ public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
 		}
 	}
 	
+	@Test
 	public void testloadParamsFromPropertiesFile_defaultPropertiesFile_fileDoesNotExist() throws Exception
 	{
 		File propFile = new File(OptionsManager.DEFAULT_PROPERTIES_FILE);
@@ -73,6 +77,7 @@ public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
 	
 	}
 	
+	@Test
 	public void testloadParamsFromPropertiesFile_customPropertiesFile_fileDoesNotExist() throws Exception
 	{
 		File propFile = new File("./target/props/" + OptionsManager.DEFAULT_PROPERTIES_FILE);
@@ -85,7 +90,7 @@ public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
 	
 	}
 	
-	@SuppressWarnings("deprecation")
+	@Test
 	public void testloadParamsFromPropertiesFile_customPropertiesFile() throws Exception
 	{
 		File propFile = new File("./target/props/" + OptionsManager.DEFAULT_PROPERTIES_FILE);
@@ -94,20 +99,18 @@ public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
 		
 		System.setProperty("org.nhindirect.stagent.PropertiesFile", "./target/props/" + OptionsManager.DEFAULT_PROPERTIES_FILE);
 		
-		OutputStream outStream = null;
 		final String jvmPropValue = UUID.randomUUID().toString();
 		
-		try
+		try (OutputStream outStream = FileUtils.openOutputStream(propFile);)
 		{
 			
-			outStream = FileUtils.openOutputStream(propFile);
+			
 			final String value = "org.nhindirect.stagent.cryptography.JCEProviderName=" + jvmPropValue;
 			outStream.write(value.getBytes());
 			
 		}
 		finally
 		{
-			IOUtils.closeQuietly(outStream);
 		}
 		
 		OptionsParameter param = OptionsManager.getInstance().getParameter(OptionsParameter.JCE_PROVIDER);
@@ -124,7 +127,7 @@ public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
+	@Test
 	public void testloadParamsFromPropertiesFile_customPropertiesFile_paramIsNotAKnownJVMProp() throws Exception
 	{
 		File propFile = new File("./target/props/" + OptionsManager.DEFAULT_PROPERTIES_FILE);
@@ -133,20 +136,18 @@ public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
 		
 		System.setProperty("org.nhindirect.stagent.PropertiesFile", "./target/props/" + OptionsManager.DEFAULT_PROPERTIES_FILE);
 		
-		OutputStream outStream = null;
 		final String jvmPropValue = UUID.randomUUID().toString();
 		
-		try
+		try (OutputStream outStream = FileUtils.openOutputStream(propFile);)
 		{
 			
-			outStream = FileUtils.openOutputStream(propFile);
+			
 			final String value = "testProperty=" + jvmPropValue;
 			outStream.write(value.getBytes());
 			
 		}
 		finally
 		{
-			IOUtils.closeQuietly(outStream);
 		}
 		
 		OptionsParameter param = OptionsManager.getInstance().getParameter("testProperty");
@@ -163,26 +164,21 @@ public class OptionsManager_loadParamsFromPropertiesFileTest extends TestCase
 		}
 	}
 	
-	
-	@SuppressWarnings("deprecation")
+	@Test
 	public void testloadParamsFromPropertiesFile_defaultPropertiesFile_JVMOverridesProperty() throws Exception
 	{
 		File propFile = new File(OptionsManager.DEFAULT_PROPERTIES_FILE);
 		if (propFile.exists())
 			propFile.delete();
 		
-		OutputStream outStream = null;
 		
-		
-		try
+		try (OutputStream outStream = FileUtils.openOutputStream(propFile))
 		{
-			outStream = FileUtils.openOutputStream(propFile);
 			outStream.write("org.nhindirect.stagent.cryptography.JCEProviderName=SC".getBytes());
 			
 		}
 		finally
 		{
-			IOUtils.closeQuietly(outStream);
 		}
 		
 		final String jvmPropValue = UUID.randomUUID().toString();

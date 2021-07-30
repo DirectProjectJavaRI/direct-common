@@ -1,9 +1,14 @@
 package org.nhindirect.common.options;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class OptionsParameter_getParamValueAsBooleanTest extends TestCase 
+import org.junit.jupiter.api.Test;
+
+public class OptionsParameter_getParamValueAsBooleanTest
 {
+	@Test
 	public void testGetParamValueAsBoolean_nullParam_returnDefaultVal()
 	{
 		boolean retVal = OptionsParameter.getParamValueAsBoolean(null, true);
@@ -11,6 +16,7 @@ public class OptionsParameter_getParamValueAsBooleanTest extends TestCase
 		assertTrue(retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsBoolean_nullParamValue_returnDefaultVal()
 	{
 		boolean retVal = OptionsParameter.getParamValueAsBoolean(new OptionsParameter("test", null), true);
@@ -18,6 +24,7 @@ public class OptionsParameter_getParamValueAsBooleanTest extends TestCase
 		assertTrue(retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsBoolean_emptyParamValue_returnDefaultVal()
 	{
 		boolean retVal = OptionsParameter.getParamValueAsBoolean(new OptionsParameter("test", ""), true);
@@ -25,6 +32,7 @@ public class OptionsParameter_getParamValueAsBooleanTest extends TestCase
 		assertEquals(true, retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsBoolean_invalidBooleanFormat_returnFalse()
 	{
 		boolean retVal = OptionsParameter.getParamValueAsBoolean(new OptionsParameter("test", "i-/ekux"), true);
@@ -32,6 +40,7 @@ public class OptionsParameter_getParamValueAsBooleanTest extends TestCase
 		assertFalse(retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsBoolean_validTrueValue_returnValue()
 	{
 		boolean retVal = OptionsParameter.getParamValueAsBoolean(new OptionsParameter("test", "true"), true);
@@ -39,6 +48,7 @@ public class OptionsParameter_getParamValueAsBooleanTest extends TestCase
 		assertTrue(retVal);
 	}
 	
+	@Test
 	public void testGetParamValueAsBoolean_validFalseValue_returnValue()
 	{
 		boolean retVal = OptionsParameter.getParamValueAsBoolean(new OptionsParameter("test", "false"), true);

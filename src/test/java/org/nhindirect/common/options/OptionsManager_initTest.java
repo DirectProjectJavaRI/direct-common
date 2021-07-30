@@ -1,28 +1,34 @@
 package org.nhindirect.common.options;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OptionsManager_initTest extends TestCase
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class OptionsManager_initTest
 {
-	@Override
+	@BeforeEach
 	public void setUp()
 	{
 		OptionsManager.INSTANCE = null;
 	}
 	
-	@Override
+	@AfterEach
 	public void tearDown()
 	{
 		OptionsManager.getInstance().options.clear();
 
 	}
 	
+	@Test
 	public void testInit_noParamsSet() throws Exception
 	{
 		OptionsManager manager = OptionsManager.getInstance();
 		assertEquals(0, manager.options.size());
 	}
 	
+	@Test
 	public void testInit_noUnknownParam() throws Exception
 	{
 		OptionsManager manager = OptionsManager.getInstance();
@@ -30,6 +36,7 @@ public class OptionsManager_initTest extends TestCase
 		assertEquals(0, manager.options.size());
 	}
 	
+	@Test
 	public void testInit_emptyParamValue() throws Exception
 	{
 		System.setProperty("org.nhindirect.stagent.cryptography.JCEProviderName", "");
@@ -39,6 +46,7 @@ public class OptionsManager_initTest extends TestCase
 
 	}
 	
+	@Test
 	public void testInit_populateParamValue() throws Exception
 	{
 		System.setProperty("org.nhindirect.stagent.cryptography.JCEProviderName", "BC");
