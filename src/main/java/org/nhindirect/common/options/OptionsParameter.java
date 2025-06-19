@@ -158,7 +158,30 @@ public class OptionsParameter
 	 * <p><b>JVM Parameter/Options Name:</b> org.nhindirect.stagent.cryptographer.smime.EncryptionAlgorithm
 	 */
     public final static String CRYPTOGRAHPER_SMIME_ENCRYPTION_ALGORITHM = "CRYPTOGRAHPER_SMIME_ENCRYPTION_ALGORITHM";
-    
+
+	/**
+	 * String value that specifies the key encryption algorithm used to encrypt message keys by the SMIME cryptographer
+	 * <br>Valid option values:
+	 * <ul>
+	 * <li>RSA_OAEP</li>
+	 * <li>RSA_PKCS#1V15</li>
+	 * </ul>
+	 * <p><b>JVM Parameter/Options Name:</b> org.nhindirect.stagent.cryptographer.smime.EncryptionAlgorithm
+	 */
+	public final static String CRYPTOGRAHPER_KEY_ENCRYPTION_ALGORITHM = "CRYPTOGRAHPER_KEY_ENCRYPTION_ALGORITHM";
+
+	/**
+	 * String value that specifies the key encryption algorithm used to encrypt message keys by the SMIME cryptographer
+	 * <br>Valid option values:
+	 * <ul>
+	 * <li>SHA1</li>
+	 * <li>SHA256</li>
+	 * <li>SHA384</li>
+	 * <li>SHA512</li>
+	 * </ul>
+	 * <p><b>JVM Parameter/Options Name:</b> org.nhindirect.stagent.cryptographer.smime.EncryptionAlgorithm
+	 */
+	public final static String CRYPTOGRAHPER_KEY_ENCRYPTION_DIGEST_ALGORITHM = "CRYPTOGRAHPER_KEY_ENCRYPTION_DIGEST_ALGORITHM";
 	/**
 	 * String value that specifies the digest algorithm used to hash messages by the SMIME cryptographer
 	 * <br>Valid option values:
