@@ -107,6 +107,8 @@ public class OptionsManager
 		 */
 		JVM_PARAMS.put(OptionsParameter.CRYPTOGRAHPER_SMIME_ENCRYPTION_ALGORITHM, "org.nhindirect.stagent.cryptographer.smime.EncryptionAlgorithm");
 		JVM_PARAMS.put(OptionsParameter.CRYPTOGRAHPER_SMIME_DIGEST_ALGORITHM, "org.nhindirect.stagent.cryptographer.smime.DigestAlgorithm");
+		JVM_PARAMS.put(OptionsParameter.CRYPTOGRAHPER_KEY_ENCRYPTION_ALGORITHM, "org.nhindirect.stagent.cryptographer.smime.KeyEncryptionAlgorithm");
+		JVM_PARAMS.put(OptionsParameter.CRYPTOGRAHPER_KEY_ENCRYPTION_DIGEST_ALGORITHM, "org.nhindirect.stagent.cryptographer.smime.KeyEncryptionDigestAlgorithm");
 		JVM_PARAMS.put(OptionsParameter.ENFORCE_STRONG_DIGESTS, "org.nhindirect.stagent.cryptographer.smime.EnforceStrongDigests");
 		JVM_PARAMS.put(OptionsParameter.ENFORCE_STRONG_ENCRYPTION, "org.nhindirect.stagent.cryptographer.smime.EnforceStrongEncryption");
 		JVM_PARAMS.put(OptionsParameter.CRYPTOGRAHPER_LOG_DIGESTS, "org.nhindirect.stagent.cryptographer.smime.LogDigests");
