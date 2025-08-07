@@ -27,7 +27,7 @@ package org.nhindirect.common.rest.exceptions;
  * @since 1.1
  */
 ///CLOVER:OFF
-public class ServiceException extends Exception
+public class ServiceException extends RuntimeException
 {
 	static final long serialVersionUID = 8744000577326651881L;
 	

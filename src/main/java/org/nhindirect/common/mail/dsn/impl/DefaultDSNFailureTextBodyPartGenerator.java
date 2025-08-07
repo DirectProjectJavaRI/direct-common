@@ -24,10 +24,10 @@ package org.nhindirect.common.mail.dsn.impl;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.mail.Address;
-import javax.mail.Header;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
+import jakarta.mail.Address;
+import jakarta.mail.Header;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeBodyPart;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.nhindirect.common.mail.dsn.DSNFailureTextBodyPartGenerator;

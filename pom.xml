@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>direct-common</artifactId>    
     <name>Direct Project common APIs</name>
-    <version>8.2.0-SNAPSHOT</version>
+    <version>9.0.0-SNAPSHOT</version>
     <description>Direct Project common APIs.  Includes instrumentation, auditing, and other utility APIs</description>
     <inceptionYear>2010</inceptionYear>
     <url>http://api.nhindirect.org/x/www/api.nhindirect.org/java/site/direct-common/${project.version}</url> 
@@ -27,21 +27,21 @@
    </prerequisites>   
    <properties>
       <jmockit.version>1.49</jmockit.version>
-      <cf-env.version>2.4.0</cf-env.version>
-      <guava.version>30.1.1-jre</guava.version>
-      <jdom.version>1.1.3</jdom.version>
-      <javax-mail.version>1.6.2</javax-mail.version>
-      <dsn.version>1.6.7</dsn.version>
-      <commons-text.version>1.9</commons-text.version>
-      <commons-io.version>2.8.0</commons-io.version>
-      <mina-core.version>2.1.4</mina-core.version>
-      <bcprov-jdk18on.version>1.81</bcprov-jdk18on.version>
-      <bcmail-jdk18on>1.81</bcmail-jdk18on>
+      <cf-env.version>3.4.0</cf-env.version>
+      <guava.version>33.4.8-jre</guava.version>
+      <dsn.version>2.0.1</dsn.version>
+      <jdom-version>1.1.3</jdom-version>
+      <commons-text.version>1.13.1</commons-text.version>
+      <commons-io.version>2.19.0</commons-io.version>
+      <mina-core.version>2.2.4</mina-core.version>
+      <bcprov-jdk18on.version>1.80</bcprov-jdk18on.version>
+      <bcjmail-jdk18on>1.81</bcjmail-jdk18on>
+      <spring-cloud-version>2025.0.0</spring-cloud-version>      
    </properties>
    <parent>
 	   <groupId>org.springframework.boot</groupId>
 	   <artifactId>spring-boot-dependencies</artifactId>
-	   <version>2.5.2</version>
+	   <version>3.5.0</version>
 	   <relativePath />
    </parent>	   
 	<scm>
@@ -55,18 +55,11 @@
      </license>
   </licenses>        
 	<dependencyManagement>
-		<dependencies>											
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>2.5.2</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>			
+		<dependencies>													
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-starter-parent</artifactId>
-				 <version>2020.0.3</version>
+				 <version>${spring-cloud-version}</version>
 				<type>pom</type>
 				<scope>import</scope>		
 			</dependency>											
@@ -76,25 +69,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-		</dependency>  
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>		
-			<exclusions>
-				<exclusion>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk15on</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcmail-jdk15on</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcpkix-jdk15on</artifactId>
-				</exclusion>
-			</exclusions>			
-		</dependency>	
+		</dependency>  	
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-webflux</artifactId>
+	    </dependency>		
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-commons</artifactId>		
@@ -130,13 +109,8 @@
 		<dependency>
 		    <groupId>org.jdom</groupId>
 		    <artifactId>jdom</artifactId>
-		    <version>${jdom.version}</version>    
+		    <version>${jdom-version}</version>
 		</dependency>  	
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>${javax-mail.version}</version>
-		</dependency>				 
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>dsn</artifactId>
@@ -172,8 +146,8 @@
 		</dependency>  
 		<dependency>
 		    <groupId>org.bouncycastle</groupId>
-		    <artifactId>bcmail-jdk18on</artifactId>
-		    <version>${bcmail-jdk18on}</version>	    
+		    <artifactId>bcjmail-jdk18on</artifactId>
+		    <version>${bcjmail-jdk18on}</version>	    
 		</dependency>	
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
@@ -233,7 +207,6 @@
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-jxr-plugin</artifactId>
-		<version>3.1.1</version>
 	</plugin> 	
 	<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
@@ -251,8 +224,8 @@
 			<optimize>true</optimize>
 			<showDeprecation>true</showDeprecation>
 			<encoding>UTF-8</encoding>
-			<source>1.8</source>
-			<target>1.8</target>
+			<source>17</source>
+			<target>17</target>
 		</configuration>
 	</plugin>	     
       <plugin>
@@ -292,7 +265,7 @@
 			<docfilessubdirs>true</docfilessubdirs>
 			<detectJavaApiLink>true</detectJavaApiLink>
 			<detectLinks>true</detectLinks>
-			<source>1.8</source>
+			<source>17</source>
 			<show>public</show>
             <excludePackageNames>
                org.nhindirect.common.mail.dsn.impl:org.nhindirect.common.tx.impl:org.nhindirect.common.tx.provider:org.nhindirect.common.tx.module:org.nhindirect.common.tooling:org.nhindirect.common.crypto.tools
@@ -350,7 +323,7 @@
 				<docfilessubdirs>true</docfilessubdirs>
 				<detectJavaApiLink>true</detectJavaApiLink>
 				<detectLinks>true</detectLinks>
-				<source>1.8</source>
+				<source>17</source>
 				<show>public</show>
 	            <excludePackageNames>
 	               org.nhindirect.common.mail.dsn.impl:org.nhindirect.common.tx.impl:org.nhindirect.common.tx.provider:org.nhindirect.common.tx.module:org.nhindirect.common.tooling:org.nhindirect.common.crypto.tools
@@ -361,7 +334,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
        			<configuration>
-          			<targetJdk>1.8</targetJdk>
+          			<targetJdk>17</targetJdk>
         		</configuration>					
 			</plugin>
 		    <plugin>
@@ -371,7 +344,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>3.1.1</version>
 			</plugin>
 	        <plugin>
 	            <groupId>org.codehaus.mojo</groupId> 

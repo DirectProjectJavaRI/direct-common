@@ -21,7 +21,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.nhindirect.common.mail.dsn;
 
-import javax.mail.internet.InternetHeaders;
+import jakarta.mail.internet.InternetHeaders;
 
 import com.sun.mail.dsn.DeliveryStatus;
 
