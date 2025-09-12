@@ -39,7 +39,6 @@ public class MailUtil
 	 * @param message The message to serializes
 	 * @return The message as a byte array.
 	 */
-    @SuppressWarnings("deprecation")
 	public static byte[] serializeToBytes(MimePart message)
     {
     	byte[] retVal;    	

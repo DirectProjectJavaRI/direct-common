@@ -39,6 +39,11 @@ public class PKCS11OperationTests
 		
 		if (!StringUtils.isEmpty(pkcs11ProvName))
 		{
+			// must login first before using the key store
+			// do this with a KeyStoreManager
+			final PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff!");
+			new StaticPKCS11TokenKeyStoreProtectionManager(cred, "KeyStoreProtKey", "PrivKeyProtKey");
+			
 			try
 			{
 				final KeyGenerator keyGen = KeyGenerator.getInstance("AES", pkcs11ProvName);

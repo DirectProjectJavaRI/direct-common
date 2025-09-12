@@ -41,7 +41,7 @@ public class StaticPKCS11TokenKeyStoreProtectionManagerTest
 		
 		if (!StringUtils.isEmpty(pkcs11ProvName))
 		{
-			final PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff");
+			final PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff!");
 			
 			final StaticPKCS11TokenKeyStoreProtectionManager mgr = new StaticPKCS11TokenKeyStoreProtectionManager(cred, "KeyStoreProtKey", "PrivKeyProtKey");
 			
@@ -74,9 +74,11 @@ public class StaticPKCS11TokenKeyStoreProtectionManagerTest
 		
 		if (!StringUtils.isEmpty(pkcs11ProvName))
 		{
-			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff");
+			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff!");
 			
 			final StaticPKCS11TokenKeyStoreProtectionManager mgr = new StaticPKCS11TokenKeyStoreProtectionManager(cred, "KeyStoreProtKey", "PrivKeyProtKey");
+			mgr.setKeyStoreProviderName(StaticPKCS11TokenKeyStoreProtectionManager.SUNPKCS11_KEYSTORE_PROVIDER_NAME);
+			mgr.setPcks11ConfigFile("./src/test/resources/pkcs11Config/pkcs11.cfg");
 			
 			// create the keys on the token
 			KeyGenerator keyGen = KeyGenerator.getInstance("AES");
@@ -107,7 +109,7 @@ public class StaticPKCS11TokenKeyStoreProtectionManagerTest
 		
 		if (!StringUtils.isEmpty(pkcs11ProvName))
 		{
-			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff");
+			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff!");
 			
 			final StaticPKCS11TokenKeyStoreProtectionManager mgr = new StaticPKCS11TokenKeyStoreProtectionManager(cred, "KeyStoreProtKey", "PrivKeyProtKey");
 			
@@ -134,7 +136,7 @@ public class StaticPKCS11TokenKeyStoreProtectionManagerTest
 		
 		if (!StringUtils.isEmpty(pkcs11ProvName))
 		{
-			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff");
+			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff!");
 			
 			final StaticPKCS11TokenKeyStoreProtectionManager mgr = new StaticPKCS11TokenKeyStoreProtectionManager(cred, "KeyStoreProtKey", "PrivKeyProtKey");
 			
@@ -176,7 +178,7 @@ public class StaticPKCS11TokenKeyStoreProtectionManagerTest
 		
 		if (!StringUtils.isEmpty(pkcs11ProvName))
 		{
-			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff");
+			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff!");
 			
 			final StaticPKCS11TokenKeyStoreProtectionManager mgr = new StaticPKCS11TokenKeyStoreProtectionManager(cred, "KeyStoreProtKey", "PrivKeyProtKey");
 			
@@ -199,7 +201,7 @@ public class StaticPKCS11TokenKeyStoreProtectionManagerTest
 		
 		if (!StringUtils.isEmpty(pkcs11ProvName))
 		{
-			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff");
+			PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff!");
 			
 			final StaticPKCS11TokenKeyStoreProtectionManager mgr = new StaticPKCS11TokenKeyStoreProtectionManager(cred, "KeyStoreProtKey", "PrivKeyProtKey");
 			

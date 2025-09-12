@@ -24,7 +24,6 @@ package org.nhindirect.common.crypto.impl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStore.Entry;
@@ -147,10 +146,12 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 					
 					if (!providerFound)
 					{
-						// dynamic load... some class loaders may have issues, so use dynamic loading
-						final Class<?> provider = this.getClass().getClassLoader().loadClass("sun.security.pkcs11.SunPKCS11");
-						final Constructor<?> ctor = provider.getConstructor(String.class);
-						Security.addProvider((Provider)ctor.newInstance(this.pcks11ConfigFile));
+						// no longer use dynamic loading... get the SunPKCS11 provider and configure it
+						Provider prov = Security.getProvider("SunPKCS11");
+						if (prov == null) 
+							throw new IllegalStateException("SunPKCS11 provider class is not available.");
+						
+						Security.addProvider(prov.configure(this.pcks11ConfigFile));
 					}
 				}
 				else
@@ -376,30 +377,18 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 	@Override
 	public void setPrivateKeyProtectionKeyAsBytes(byte[] key) throws CryptoException 
 	{
-		try 
-		{
-			final Key keySpec = new SecretKeySpec(key, "");
-			safeSetKeyWithRetry(privateKeyPassPhraseAlias, keySpec);
-		} 
-		catch (CryptoException e)
-		{
-			throw e;
-		}
-		catch (Exception e) 
-		{
-			throw new CryptoException("Error storing key store protection into PKCS11 token", e);
-		}
+		setPrivateKeyProtectionKeyAsBytes(key, "AES");
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setPrivateKeyProtectionKeyAsString(String key) throws CryptoException 
+	public void setPrivateKeyProtectionKeyAsBytes(byte[] key, String algorithm) throws CryptoException 
 	{
 		try 
 		{
-			final Key keySpec = new SecretKeySpec(key.getBytes(), "");
+			final Key keySpec = new SecretKeySpec(key, algorithm);
 			safeSetKeyWithRetry(privateKeyPassPhraseAlias, keySpec);
 		} 
 		catch (CryptoException e)
@@ -411,7 +400,37 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 			throw new CryptoException("Error storing key store protection into PKCS11 token", e);
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setPrivateKeyProtectionKeyAsString(String key) throws CryptoException 
+	{
+		setPrivateKeyProtectionKeyAsString(key, "AES");
+	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setPrivateKeyProtectionKeyAsString(String key, String algorithm) throws CryptoException 
+	{
+		try 
+		{
+			final Key keySpec = new SecretKeySpec(key.getBytes(), algorithm);
+			safeSetKeyWithRetry(privateKeyPassPhraseAlias, keySpec);
+		} 
+		catch (CryptoException e)
+		{
+			throw e;
+		}
+		catch (Exception e) 
+		{
+			throw new CryptoException("Error storing key store protection into PKCS11 token", e);
+		}
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -436,9 +455,18 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 	@Override
 	public void setKeyStoreProtectionKeyAsBytes(byte[] key) throws CryptoException 
 	{
+		setKeyStoreProtectionKeyAsBytes(key, "AES");
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setKeyStoreProtectionKeyAsBytes(byte[] key, String algorithm) throws CryptoException 
+	{
 		try 
 		{
-			final Key keySpec = new SecretKeySpec(key, "");
+			final Key keySpec = new SecretKeySpec(key, algorithm);
 			safeSetKeyWithRetry(keyStorePassPhraseAlias, keySpec);
 		} 
 		catch (CryptoException e)
@@ -457,9 +485,18 @@ public abstract class AbstractPKCS11TokenKeyStoreProtectionManager implements Mu
 	@Override
 	public void setKeyStoreProtectionKeyAsString(String key) throws CryptoException 
 	{
+		setKeyStoreProtectionKeyAsString(key, "AES");
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setKeyStoreProtectionKeyAsString(String key, String algorithm) throws CryptoException 
+	{
 		try 
 		{
-			final Key keySpec = new SecretKeySpec(key.getBytes(), "");
+			final Key keySpec = new SecretKeySpec(key.getBytes(), algorithm);
 			safeSetKeyWithRetry(keyStorePassPhraseAlias, keySpec);
 		} 
 		catch (CryptoException e)

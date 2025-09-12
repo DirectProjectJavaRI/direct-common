@@ -9,6 +9,7 @@ public class TestUtils
 {	
     /**
      * used for testing with a pkcs11 token
+     * to login to the token, use an appropriate KeyStoreProtectionManager instance which will instigate the login with a KeyStore.load() call
      * @return The Security provider name if the token is loaded successfully... an empty string other wise 
      * @throws Exception
      */
