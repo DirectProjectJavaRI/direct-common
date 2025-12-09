@@ -38,21 +38,21 @@ import javax.security.auth.x500.X500Principal;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.x509.Attribute;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.ExtendedKeyUsage;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.ExtensionsGenerator;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 import org.bouncycastle.asn1.x509.KeyUsage;
-import org.bouncycastle.asn1.x509.X509Extensions;
-import org.bouncycastle.asn1.x509.X509ExtensionsGenerator;
 import org.bouncycastle.crypto.prng.VMPCRandomGenerator;
-import org.bouncycastle.jce.PKCS10CertificationRequest;
 import org.bouncycastle.jce.X509Principal;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
+import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.nhindirect.common.crypto.MutableKeyStoreProtectionManager;
 import org.nhindirect.common.crypto.WrappableKeyProtectionManager;
@@ -610,7 +610,7 @@ public class PKCS11Commands
 			// create the CSR
 			
 			//  create the extensions that we want
-			final X509ExtensionsGenerator extsGen = new X509ExtensionsGenerator();
+	        final ExtensionsGenerator extsGen = new ExtensionsGenerator();
 			
 			// Key Usage
 			int usage;
@@ -621,32 +621,23 @@ public class PKCS11Commands
 			else
 				usage = KeyUsage.keyEncipherment | KeyUsage.digitalSignature;
 			
-			extsGen.addExtension(X509Extensions.KeyUsage, true, new KeyUsage(usage));
+			extsGen.addExtension(Extension.keyUsage, true, new KeyUsage(usage));
 			
 			// Subject Alt Name
 	    	int nameType = subjectAltName.contains("@") ? GeneralName.rfc822Name : GeneralName.dNSName;
 	    	final GeneralNames altName = new GeneralNames(new GeneralName(nameType, subjectAltName));
-	    	extsGen.addExtension(X509Extensions.SubjectAlternativeName, false, altName);
+	    	extsGen.addExtension(Extension.subjectAlternativeName, false, altName);
 			
 			// Extended Key Usage
-			final Vector<KeyPurposeId> purposes = new Vector<KeyPurposeId>();
-			purposes.add(KeyPurposeId.id_kp_emailProtection);
-			extsGen.addExtension(X509Extensions.ExtendedKeyUsage, false, new ExtendedKeyUsage(purposes));
+			ExtendedKeyUsage eku = new ExtendedKeyUsage(KeyPurposeId.id_kp_emailProtection);
+			
+			
+			extsGen.addExtension(Extension.extendedKeyUsage, false, eku);
 			
 			// Basic constraint
 			final BasicConstraints bc = new BasicConstraints(false);
-			extsGen.addExtension(X509Extensions.BasicConstraints, true, bc);
+			extsGen.addExtension(Extension.basicConstraints, true, bc);
 			
-			// create the extension requests
-			final X509Extensions exts = extsGen.generate();
-			
-	        final ASN1EncodableVector attributes = new ASN1EncodableVector();
-	        final Attribute attribute = new Attribute(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest,
-	                new DERSet(exts.toASN1Primitive()));
-	        
-	        attributes.add(attribute);
-	        
-	        final DERSet requestedAttributes = new DERSet(attributes);
 	        
 			// create the DN
 			final StringBuilder dnBuilder = new StringBuilder("CN=").append(commonName);
@@ -656,16 +647,20 @@ public class PKCS11Commands
 			
 			final X500Principal subjectPrin = new X500Principal(dnBuilder.toString());
 			
-			final X509Principal xName = new X509Principal(true, subjectPrin.getName());
+			//final X509Principal xName = new X509Principal(true, subjectPrin.getName());
+			PKCS10CertificationRequestBuilder builder = new JcaPKCS10CertificationRequestBuilder(subjectPrin, storedCert.getPublicKey());
+			builder.setAttribute(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest, extsGen.generate());
+			
+			JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder("SHA256withRSA");
+			ContentSigner signer = csBuilder.build(privKey);
 			
 			// create the CSR
-			final PKCS10CertificationRequest request = new PKCS10CertificationRequest("SHA256WITHRSA", xName, storedCert.getPublicKey(), 
-			        requestedAttributes, privKey, ks.getProvider().getName());
+
 			
-			final byte[] encodedCSR = request.getEncoded();
+			final byte[] encodedCSR = builder.build(signer).getEncoded();
 			
 			final String csrString = "-----BEGIN CERTIFICATE REQUEST-----\r\n"  + Base64.encodeBase64String(encodedCSR) 
-			+ "-----END CERTIFICATE REQUEST-----";
+			+ "\r\n-----END CERTIFICATE REQUEST-----";
 			
 			final File csrFile = new File(alias + "-CSR.pem");
 			FileUtils.writeStringToFile(csrFile, csrString);

@@ -25,7 +25,7 @@ public class TestUtils
 					if (callback instanceof PasswordCallback)
 					{		
 						
-						 ((PasswordCallback)callback).setPassword("1Kingpuff".toCharArray());
+						 ((PasswordCallback)callback).setPassword("1Kingpuff!".toCharArray());
 					
 					}
 				}
