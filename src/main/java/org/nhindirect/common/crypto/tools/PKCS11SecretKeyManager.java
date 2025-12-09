@@ -6,10 +6,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.Security;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.nhindirect.common.crypto.MutableKeyStoreProtectionManager;
 import org.nhindirect.common.crypto.exceptions.CryptoException;
 import org.nhindirect.common.crypto.impl.BootstrappedPKCS11Credential;
@@ -31,10 +33,17 @@ public class PKCS11SecretKeyManager
 	protected static String pkcs11ProviderCfg = null;
 	protected static String keyStoreConfigFile = null;
 	
+	static {
+		Security.addProvider(new BouncyCastleProvider());
+	}
+	
 	public static void main(String[] argv)
 	{     
 		String[] passArgs = null;
 
+		// make sure bouncy castle is initialized
+		
+		
 		
 		// need to check if there is a configuration for the PKCS11
 		// provider... if not, assume the JVM has already been configured for one

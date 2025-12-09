@@ -69,8 +69,15 @@ public class StaticCachedPKCS11TokenKeyStoreProtectionManager extends StaticPKCS
 			// some HSMs only store references to the keys in these objects and 
 			// and still have to go back to the HSM to pull the actual key data
 			// create a key object from the encoded data
-			keystoreProtectionKey = new SecretKeySpec(keystoreProtectionKey.getEncoded(), "");
-			privateKeyProtectionKey = new SecretKeySpec(privateKeyProtectionKey.getEncoded(), "");
+			
+			System.out.print("keystoreProtectionKey is null: " + (keystoreProtectionKey.getEncoded() != null));
+			System.out.print("privateKeyProtectionKey is null: " + (privateKeyProtectionKey.getEncoded() != null));
+			
+			if (keystoreProtectionKey.getEncoded() != null)
+				keystoreProtectionKey = new SecretKeySpec(keystoreProtectionKey.getEncoded(), "");
+			
+			if (privateKeyProtectionKey.getEncoded() != null)
+				privateKeyProtectionKey = new SecretKeySpec(privateKeyProtectionKey.getEncoded(), "");
 			
 			
 			

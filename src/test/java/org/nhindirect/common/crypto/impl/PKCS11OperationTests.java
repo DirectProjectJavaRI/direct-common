@@ -65,7 +65,7 @@ public class PKCS11OperationTests
 		{
 			final KeyStore ks = KeyStore.getInstance("PKCS11");
 			
-			ks.load(null, "1Kingpuff".toCharArray());
+			ks.load(null, "1Kingpuff!".toCharArray());
 			
 			final Enumeration<String> aliases = ks.aliases();
 			
@@ -117,7 +117,7 @@ public class PKCS11OperationTests
 		
 		if (!StringUtils.isEmpty(pkcs11ProvName))
 		{
-			final PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff");
+			final PKCS11Credential cred = new BootstrappedPKCS11Credential("1Kingpuff!");
 			final StaticPKCS11TokenKeyStoreProtectionManager mgr = 
 					new StaticPKCS11TokenKeyStoreProtectionManager(cred, "KeyStoreProtKey", "PrivKeyProtKey");
 			
@@ -136,10 +136,10 @@ public class PKCS11OperationTests
 			 * wrap it on the HSM.
 			 */
 			final KeyStore store = KeyStore.getInstance("pkcs12");
-			store.load(FileUtils.openInputStream(new File("./src/test/resources/certs/gm2552encrypted.p12")), "1kingpuff".toCharArray());
+			store.load(FileUtils.openInputStream(new File("./src/test/resources/certs/gm2552encrypted.p12")), "1Kingpuff!".toCharArray());
 			// there should only be on entry
 			final String alias = store.aliases().nextElement();
-			final PrivateKey entry = (PrivateKey)store.getKey(alias, "1kingpuff".toCharArray());
+			final PrivateKey entry = (PrivateKey)store.getKey(alias, "1Kingpuff!".toCharArray());
 			
 			/*
 			 * 3. "Wrap" the private using secret key and AES128 encryption and write it to a file.  The encryption is done
