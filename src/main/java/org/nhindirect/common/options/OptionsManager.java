@@ -241,7 +241,6 @@ public class OptionsManager
 	 * Loads options from a properties file if it exists and applies any option not already
 	 * set by a JVM option to the system properties
 	 */
-	@SuppressWarnings("deprecation")
 	protected void loadParamsFromPropertiesFile()
 	{
 		// get options from the properties file if it exists and set any parameter that has not been set

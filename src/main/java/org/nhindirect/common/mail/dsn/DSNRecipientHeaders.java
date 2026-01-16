@@ -22,7 +22,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.nhindirect.common.mail.dsn;
 
-import javax.mail.Address;
+import jakarta.mail.Address;
 
 import org.nhindirect.common.mail.dsn.DSNStandard.DSNAction;
 

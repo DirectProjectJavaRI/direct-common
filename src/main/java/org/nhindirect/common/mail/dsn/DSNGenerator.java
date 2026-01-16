@@ -26,14 +26,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.Address;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.InternetHeaders;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Address;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Message.RecipientType;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.InternetHeaders;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
 
 import org.nhindirect.common.mail.MailStandard;
 import org.nhindirect.common.mail.dsn.DSNStandard.DSNAction;
