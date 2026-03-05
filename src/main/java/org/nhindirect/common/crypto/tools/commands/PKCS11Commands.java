@@ -691,7 +691,19 @@ public class PKCS11Commands
 			final KeyPair localKeyPair = localKeyGen.generateKeyPair();
 			
 			final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA",mgr.getKS().getProvider().getName());
-			keyGen.initialize(Integer.parseInt(keySize));
+			if ("LunaProvider".equalsIgnoreCase(mgr.getKS().getProvider().getName()))
+			{
+				// Use reflection to avoid compile-time dependency on LunaProvider jar
+				final Class<?> builderClass = Class.forName("com.safenet.crypto.spec.LunaKeyGenParameterSpec$Builder");
+				final Object builder = builderClass.getConstructor(int.class).newInstance(Integer.parseInt(keySize));
+				final Object specBuilt = builderClass.getMethod("setExtractable", boolean.class).invoke(builder, true);
+				final Object spec = specBuilt.getClass().getMethod("build").invoke(specBuilt);
+				keyGen.initialize((java.security.spec.AlgorithmParameterSpec) spec);
+			}
+			else
+			{
+				keyGen.initialize(Integer.parseInt(keySize));
+			}
 	        
 	        final KeyPair keyPair = keyGen.generateKeyPair();
 	        // create a self signed certificate
