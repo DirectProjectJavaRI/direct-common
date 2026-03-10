@@ -3,8 +3,6 @@ package org.nhindirect.common.crypto.impl;
 import java.security.Key;
 import java.security.KeyStore;
 
-import javax.crypto.spec.SecretKeySpec;
-
 import org.nhindirect.common.crypto.PKCS11Credential;
 import org.nhindirect.common.crypto.exceptions.CryptoException;
 
@@ -65,20 +63,6 @@ public class StaticCachedPKCS11TokenKeyStoreProtectionManager extends StaticPKCS
 			// preload the 2 secret keys
 			keystoreProtectionKey = this.getKey(keyStorePassPhraseAlias);
 			privateKeyProtectionKey = this.getKey(privateKeyPassPhraseAlias);
-			
-			// some HSMs only store references to the keys in these objects and 
-			// and still have to go back to the HSM to pull the actual key data
-			// create a key object from the encoded data
-			
-			System.out.print("keystoreProtectionKey is null: " + (keystoreProtectionKey.getEncoded() != null));
-			System.out.print("privateKeyProtectionKey is null: " + (privateKeyProtectionKey.getEncoded() != null));
-			
-			if (keystoreProtectionKey.getEncoded() != null)
-				keystoreProtectionKey = new SecretKeySpec(keystoreProtectionKey.getEncoded(), "");
-			
-			if (privateKeyProtectionKey.getEncoded() != null)
-				privateKeyProtectionKey = new SecretKeySpec(privateKeyProtectionKey.getEncoded(), "");
-			
 			
 			
 		}
