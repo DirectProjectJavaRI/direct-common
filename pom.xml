@@ -36,12 +36,12 @@
       <mina-core.version>2.2.5</mina-core.version>
       <bcprov-jdk18on.version>1.83</bcprov-jdk18on.version>
       <bcjmail-jdk18on>1.83</bcjmail-jdk18on>
-      <spring-cloud-version>2025.1.0</spring-cloud-version>      
+      <spring-cloud-version>2025.1.1</spring-cloud-version>      
    </properties>
    <parent>
 	   <groupId>org.springframework.boot</groupId>
 	   <artifactId>spring-boot-dependencies</artifactId>
-	   <version>4.0.1</version>
+	   <version>4.0.6</version>
 	   <relativePath />
    </parent>	   
 	<scm>
@@ -73,10 +73,14 @@
 	    <dependency>
 	        <groupId>org.springframework.boot</groupId>
 	        <artifactId>spring-boot-starter-webflux</artifactId>
-	    </dependency>		
+	    </dependency>
+	    <dependency>
+	        <groupId>org.apache.httpcomponents.client5</groupId>
+	        <artifactId>httpclient5</artifactId>
+	    </dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-commons</artifactId>		
+			<artifactId>spring-cloud-commons</artifactId>
 		</dependency>	
 		<dependency>
 			<groupId>org.springframework.retry</groupId>

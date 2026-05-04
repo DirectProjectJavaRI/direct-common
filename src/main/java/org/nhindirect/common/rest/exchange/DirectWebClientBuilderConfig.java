@@ -17,6 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import io.netty.channel.ChannelOption;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
+import reactor.netty.resources.ConnectionProvider;
 
 @Configuration
 public class DirectWebClientBuilderConfig {
@@ -46,7 +47,12 @@ public class DirectWebClientBuilderConfig {
 	@Bean
 	public WebClient.Builder directWebClientBuilder() {
 		
-		// TODO: Add retry configuration
+	    ConnectionProvider provider = ConnectionProvider.builder("direct-connect-provider")                                                                                       
+	              .maxConnections(50)
+	              .maxIdleTime(Duration.ofSeconds(30))      // evict before firewalls kill them                                                                                  
+	              .maxLifeTime(Duration.ofMinutes(5))                                                                                                                            
+	              .evictInBackground(Duration.ofSeconds(30)) // periodic sweep of dead connections
+	              .build();   
 		
         HttpClient httpClient = HttpClient.create()
               .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeoutMs)
