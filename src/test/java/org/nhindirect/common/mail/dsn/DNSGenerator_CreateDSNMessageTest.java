@@ -13,12 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import javax.mail.Address;
-import javax.mail.Header;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import jakarta.mail.Address;
+import jakarta.mail.Header;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 
 import org.junit.jupiter.api.Test;
 import org.nhindirect.common.mail.MailStandard;

@@ -129,7 +129,7 @@ public class CryptoExtensions
 						CryptoExtensions.class.getClassLoader().loadClass(providerClass) :
 						clazzLoader.loadClass(providerClass);
 				
-				final Provider provider = Provider.class.cast(providerClazz.newInstance());
+				final Provider provider = Provider.class.cast(providerClazz.getDeclaredConstructor().newInstance());
 				
 				// check to see if the provider is already registered
 				if (Security.getProvider(provider.getName()) == null)
@@ -187,7 +187,7 @@ public class CryptoExtensions
 				
 				if (provider == null)
 				{
-					provider = Provider.class.cast(providerClazz.newInstance());	
+					provider = Provider.class.cast(providerClazz.getDeclaredConstructor().newInstance());	
 				}
 				
 				// check to see if the provider is already registered
@@ -546,7 +546,6 @@ public class CryptoExtensions
 	 * certificate verification.  This will convert the certificate into a cert backed by the default installed X509 certificate
 	 * provider. 
 	 */
-    @SuppressWarnings("deprecation")
 	private static X509Certificate convertToProfileProvidedCertImpl(X509Certificate certToConvert)
     {
     	X509Certificate retVal = null;

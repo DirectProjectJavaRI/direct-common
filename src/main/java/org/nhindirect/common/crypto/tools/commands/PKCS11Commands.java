@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Random;
@@ -39,6 +40,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.ExtendedKeyUsage;
 import org.bouncycastle.asn1.x509.Extension;
@@ -47,13 +49,14 @@ import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
 import org.bouncycastle.asn1.x509.KeyUsage;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.crypto.prng.VMPCRandomGenerator;
-import org.bouncycastle.jce.X509Principal;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
-import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.nhindirect.common.crypto.MutableKeyStoreProtectionManager;
 import org.nhindirect.common.crypto.WrappableKeyProtectionManager;
 import org.nhindirect.common.crypto.impl.AbstractPKCS11TokenKeyStoreProtectionManager;
@@ -610,7 +613,7 @@ public class PKCS11Commands
 			// create the CSR
 			
 			//  create the extensions that we want
-	        final ExtensionsGenerator extsGen = new ExtensionsGenerator();
+			final ExtensionsGenerator extsGen = new ExtensionsGenerator();
 			
 			// Key Usage
 			int usage;
@@ -655,8 +658,6 @@ public class PKCS11Commands
 			ContentSigner signer = csBuilder.build(privKey);
 			
 			// create the CSR
-
-			
 			final byte[] encodedCSR = builder.build(signer).getEncoded();
 			
 			final String csrString = "-----BEGIN CERTIFICATE REQUEST-----\r\n"  + Base64.encodeBase64String(encodedCSR) 
@@ -684,31 +685,55 @@ public class PKCS11Commands
 		try
 		{
 			
-			
 			// create a local keygen for a private key to sign the certificate
 			final KeyPairGenerator localKeyGen = KeyPairGenerator.getInstance("RSA", "BC");
 			
 			final KeyPair localKeyPair = localKeyGen.generateKeyPair();
 			
 			final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA",mgr.getKS().getProvider().getName());
-			keyGen.initialize(Integer.parseInt(keySize));
+			if ("LunaProvider".equalsIgnoreCase(mgr.getKS().getProvider().getName()))
+			{
+				// Use reflection to avoid compile-time dependency on LunaProvider jar
+				final Class<?> builderClass = Class.forName("com.safenet.crypto.spec.LunaKeyGenParameterSpec$Builder");
+				final Object builder = builderClass.getConstructor(int.class).newInstance(Integer.parseInt(keySize));
+				final Object specBuilt = builderClass.getMethod("setExtractable", boolean.class).invoke(builder, true);
+				final Object spec = specBuilt.getClass().getMethod("build").invoke(specBuilt);
+				keyGen.initialize((java.security.spec.AlgorithmParameterSpec) spec);
+			}
+			else
+			{
+				keyGen.initialize(Integer.parseInt(keySize));
+			}
 	        
 	        final KeyPair keyPair = keyGen.generateKeyPair();
 	        // create a self signed certificate
-	        X509V3CertificateGenerator  v1CertGen = new X509V3CertificateGenerator();
-	        v1CertGen.setPublicKey(keyPair.getPublic());
-	        v1CertGen.setSignatureAlgorithm("SHA256WithRSAEncryption");
-			Calendar start = Calendar.getInstance();
-			Calendar end = Calendar.getInstance();
-			end.add(Calendar.DAY_OF_MONTH, 3000); 
-			
-	        v1CertGen.setSerialNumber(BigInteger.valueOf(generatePositiveRandom()));
-	        v1CertGen.setIssuerDN(new X509Principal("cn=test"));
-	        v1CertGen.setNotBefore(start.getTime());
-	        v1CertGen.setNotAfter(end.getTime());
-	        v1CertGen.setSubjectDN(new X509Principal("cn=test")); // issuer and subject are the same for a CA
-	        v1CertGen.setPublicKey(keyPair.getPublic()); 
-	        X509Certificate newCACert = v1CertGen.generate(localKeyPair.getPrivate(), "BC");
+	        final Calendar start = Calendar.getInstance();
+	        final Calendar end   = Calendar.getInstance();
+	        end.add(Calendar.DAY_OF_MONTH, 3000);
+
+	        final Date notBefore = start.getTime();
+	        final Date notAfter  = end.getTime();
+	        final X500Name issuer  = new X500Name("CN=test");     
+	        final X500Name subject = new X500Name("CN=test"); // same for issuer & subject
+	        final BigInteger serial = BigInteger.valueOf(generatePositiveRandom());
+	        
+	        final JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(
+	                issuer,
+	                serial,
+	                notBefore,
+	                notAfter,
+	                subject,
+	                keyPair.getPublic());
+	        
+	        final ContentSigner signer = new JcaContentSignerBuilder("SHA256withRSA")
+	                .setProvider("BC")
+	                .build(localKeyPair.getPrivate());
+	        
+	        final X509CertificateHolder certHolder = certBuilder.build(signer);
+	        
+	        final  X509Certificate newCACert = new JcaX509CertificateConverter()
+	                .setProvider("BC")
+	                .getCertificate(certHolder);
 	        
 	        mgr.getKS().setKeyEntry(alias, keyPair.getPrivate(), "".toCharArray(), new X509Certificate[] {newCACert});
 

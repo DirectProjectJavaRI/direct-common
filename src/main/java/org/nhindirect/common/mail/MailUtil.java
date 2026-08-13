@@ -23,7 +23,7 @@ package org.nhindirect.common.mail;
 
 import java.io.ByteArrayOutputStream;
 
-import javax.mail.internet.MimePart;
+import jakarta.mail.internet.MimePart;
 
 import org.apache.commons.io.IOUtils;
 
@@ -39,7 +39,6 @@ public class MailUtil
 	 * @param message The message to serializes
 	 * @return The message as a byte array.
 	 */
-    @SuppressWarnings("deprecation")
 	public static byte[] serializeToBytes(MimePart message)
     {
     	byte[] retVal;    	

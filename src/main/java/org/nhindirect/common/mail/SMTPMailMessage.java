@@ -2,8 +2,8 @@ package org.nhindirect.common.mail;
 
 import java.util.List;
 
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 /**
  * Wraps an SMTP mail message which includes the mime message and the SMTP
