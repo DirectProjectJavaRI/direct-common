@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,5 +110,24 @@ public class DNSGenerator_CreateDSNMessageTest
 		assertThat(htmlContent, containsString("subject goes here")); // NUL is removed
 		assertThat(htmlContent, containsString("Ben &amp; Jerry")); // ampersand is encoded
 		assertThat(htmlContent, containsString("&lt;from@test.com&gt;")); // <> are encoded
+	}
+
+	@Test
+	public void testCreateDSNMessage_humanReadablePartHasNoXmlDeclaration() throws Exception
+	{
+		final DefaultDSNFailureTextBodyPartGenerator textGenerator = new DefaultDSNFailureTextBodyPartGenerator("", "", "",
+			    "", "", HumanReadableTextAssemblerFactory.getInstance());
+
+		final List<Address> faileRecips = new ArrayList<Address>();
+		faileRecips.add(new InternetAddress("ah4626@test.com"));
+
+		final MimeBodyPart textBodyPart = textGenerator.generate(new InternetAddress("gm2552@test.com"), faileRecips, null);
+
+		final String htmlContent = (String) textBodyPart.getContent();
+
+		// the part is declared text/html; JDOM's XMLOutputter defaults to emitting an XML declaration
+		// prolog, which is not valid at the start of an HTML document and must be suppressed
+		assertThat(htmlContent, not(containsString("<?xml")));
+		assertThat(htmlContent.trim(), startsWith("<html>"));
 	}
 }

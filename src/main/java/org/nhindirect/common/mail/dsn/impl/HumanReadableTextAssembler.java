@@ -165,29 +165,30 @@ public class HumanReadableTextAssembler
       p.addContent(text);
     }
     Document document = new Document(html);
+    // this is HTML, not an XML document, so the output must not carry an XML declaration prolog
+    final Format format = Format.getPrettyFormat();
+    format.setOmitDeclaration(true);
     String randomStr;
     {
       // Determine which string indicator can be used to indicate that a
       // string should not be escaped.
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      XMLOutputter outputter = new NoEscapeXMLOutputter(Format
-          .getPrettyFormat());
+      XMLOutputter outputter = new NoEscapeXMLOutputter(format);
       outputter.output(document, byteArrayOutputStream);
       String htmlString = new String(byteArrayOutputStream.toByteArray());
       randomStr = getUniqueString();
-      while (htmlString.indexOf(randomStr) > -1) 
+      while (htmlString.indexOf(randomStr) > -1)
       {
         randomStr = getUniqueString();
       }
     }
 	    String htmlString;
     {
-      for (UnescapedText unescapedText : lstToUnescape) 
+      for (UnescapedText unescapedText : lstToUnescape)
       {
         unescapedText.setUnescapedIndicator(randomStr);
       }
-      XMLOutputter outputter = new UnescapedAwareXMLOutputter(Format
-          .getPrettyFormat(), randomStr);
+      XMLOutputter outputter = new UnescapedAwareXMLOutputter(format, randomStr);
       ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
       outputter.output(document, byteArrayOutputStream);
       htmlString = new String(byteArrayOutputStream.toByteArray());
